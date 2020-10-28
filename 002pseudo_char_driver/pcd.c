@@ -141,12 +141,12 @@ struct file_operations pcd_fops = {
 
 static int __init pcd_driver_init(void){
 
-	int ret; /* return value */
+	int ret; /* return value for error check */
 
 	/* 1. Dynamically allocate a device number */
 	ret = alloc_chrdev_region(&device_number, 0, 1, "pcd_devices");
 
-	/* Checks if an error has occurs */
+	/* Checks if an error has occurs on alloc_chrdev_region function */
 	if(ret < 0){
 		pr_err("Alloc chrdev failed \n");
 		goto out;
@@ -162,7 +162,7 @@ static int __init pcd_driver_init(void){
 	pcd_cdev.owner = THIS_MODULE;
 	ret = cdev_add(&pcd_cdev, device_number, 1);
 
-	/* Checks if an error has occurs */
+	/* Checks if an error has occurs on cdev_add function */
 	if(ret < 0){
 		pr_err("Cdev add failed \n");
 		goto unreg_chrdev;
@@ -171,7 +171,7 @@ static int __init pcd_driver_init(void){
 	/*4. Create device class under /sys/class/ */
 	class_pcd = class_create(THIS_MODULE, "pcd_class");
 
-	/* Checks if an error has occurs */
+	/* Checks if an error has occurs on class_create function*/
 	if(IS_ERR(class_pcd)){
 		pr_err("Class creation failed \n");		
 		ret = PTR_ERR(class_pcd);			/* PTR_ERR: Converts pointer to error code(int) */
@@ -181,7 +181,7 @@ static int __init pcd_driver_init(void){
 	/*5. Populate the sysfs with device information */
 	device_pcd = device_create(class_pcd, NULL, device_number, NULL, "pcd");
 
-	/* Checks if an error has occurs */
+	/* Checks if an error has occurs on device_create function */
 	if(IS_ERR(device_pcd)){
 		pr_err("Device create failed \n");
 		ret = PTR_ERR(device_pcd);			/* PTR_ERR: Converts pointer to error code(int) */
