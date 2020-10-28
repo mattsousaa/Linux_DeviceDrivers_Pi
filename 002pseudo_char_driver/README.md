@@ -57,7 +57,7 @@ Check the kernel log typing **dmesg** command. The result is similar to this:
 [ 8238.554899] pcd_read : Current file position = 512 (there is nothing to read)
 [ 8238.554899] pcd_read : Number of bytes successfully read = 0 (that's why our drive returned zero (EOF- End of file))
 [ 8238.554900] pcd_read : Updated file position = 512 
-[ 8238.554907] pcd_release : Release was successful 9cat issued a close system call/device was closed)
+[ 8238.554907] pcd_release : Release was successful (cat issued a close system call/device was closed)
 ```
 Create a new file in any directory and put some text inside of it. Let's say that your file has 1567 bytes. Let's try to copy its content to our device memory typing the following command: 
 

@@ -143,7 +143,8 @@ static int __init pcd_driver_init(void){
 
 	int ret; /* return value for error check */
 
-	/* 1. Dynamically allocate a device number */
+	/* 1. Dynamically allocate a device number 
+	 * Returns zero or a negative error code */
 	ret = alloc_chrdev_region(&device_number, 0, 1, "pcd_devices");
 
 	/* Checks if an error has occurs on alloc_chrdev_region function */
@@ -154,12 +155,13 @@ static int __init pcd_driver_init(void){
 
 	pr_info("Device number <major>:<minor> = %d:%d\n", MAJOR(device_number), MINOR(device_number));
 
-	/* 2. Initialize the cdev structure with fops */
-	// type nm main.ko
-	cdev_init(&pcd_cdev, &pcd_fops);
+	/* 2. Initialize the cdev structure with fops 
+	 * This is a void function */
+	cdev_init(&pcd_cdev, &pcd_fops); 
 
-	/*3. Register a device (cdev structure) with VFS*/
+	/* 3. Register a device (cdev structure) with VFS */
 	pcd_cdev.owner = THIS_MODULE;
+	/* A negative error code is returned on failure */
 	ret = cdev_add(&pcd_cdev, device_number, 1);
 
 	/* Checks if an error has occurs on cdev_add function */
@@ -168,20 +170,24 @@ static int __init pcd_driver_init(void){
 		goto unreg_chrdev;
 	}
 
-	/*4. Create device class under /sys/class/ */
+	/* 4. Create device class under /sys/class/ 
+	 * Returns &struct class pointer on success, or ERR_PTR() on error */
 	class_pcd = class_create(THIS_MODULE, "pcd_class");
 
-	/* Checks if an error has occurs on class_create function*/
+	/* Checks if an error has occurs on class_create function
+	 * ERR_PTR: Converts error code (int) to pointer */
 	if(IS_ERR(class_pcd)){
 		pr_err("Class creation failed \n");		
 		ret = PTR_ERR(class_pcd);			/* PTR_ERR: Converts pointer to error code(int) */
 		goto cdev_del;
 	}
 
-	/*5. Populate the sysfs with device information */
+	/*5. Populate the sysfs with device information 
+	 * Returns &struct class pointer on success, or ERR_PTR() on error */
 	device_pcd = device_create(class_pcd, NULL, device_number, NULL, "pcd");
 
-	/* Checks if an error has occurs on device_create function */
+	/* Checks if an error has occurs on device_create function
+	 * ERR_PTR: Converts error code (int) to pointer */
 	if(IS_ERR(device_pcd)){
 		pr_err("Device create failed \n");
 		ret = PTR_ERR(device_pcd);			/* PTR_ERR: Converts pointer to error code(int) */
