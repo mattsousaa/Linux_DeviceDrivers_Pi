@@ -13,7 +13,7 @@ network={
 }
 ```
 
-**Tip:** Browse the source code of linux/ online in [woboq](https://code.woboq.org/linux/). Here on this site you can find the linux files needed to understand the codes.
+**Tip:** Browse the source code of linux/ online in [woboq](https://code.woboq.org/linux/). Here on this site you can find the linux files needed to understand the codes instead of looking for them on your console.
 
 ## 002_pseud_char_driver - How to test this driver?
 
