@@ -13,7 +13,7 @@ network={
 }
 ```
 
-# 002_pseud_char_driver - How to test this driver?
+## 002_pseud_char_driver - How to test this driver?
 
 In this character driver we will give support to handle the below user level system calls:
 * open
