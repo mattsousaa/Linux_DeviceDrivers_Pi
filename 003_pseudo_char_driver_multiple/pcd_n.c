@@ -215,8 +215,9 @@ static int __init pcd_driver_init(void){
 		goto out;
 	}
 
-	/* Create device class under /sys/class/ 
-	 * Returns &struct class pointer on success, or ERR_PTR() on error */
+	/* 4. Create device class under /sys/class/ 
+	 * Returns &struct class pointer on success, or ERR_PTR() on error 
+	 * Do not put this function inside loop */
 	pcdrv_data.class_pcd = class_create(THIS_MODULE, "pcd_class");
 
 	/* Checks if an error has occurs on class_create function
@@ -230,11 +231,11 @@ static int __init pcd_driver_init(void){
 	for(i = 0; i < NO_OF_DEVICES; i++){
 		pr_info("Device number <major>:<minor> = %d:%d\n", MAJOR(pcdrv_data.device_number+i), MINOR(pcdrv_data.device_number+i));
 	
-		/* Initialize the cdev structure with fops 
+		/* 1. Initialize the cdev structure with fops 
 	 	 * This is a void function */
 		cdev_init(&pcdrv_data.pcdev_data[i].cdev, &pcd_fops); 
 
-		/* Register a device (cdev structure) with VFS */
+		/* 2. Register a device (cdev structure) with VFS */
 		pcdrv_data.pcdev_data[i].cdev.owner = THIS_MODULE;
 		/* A negative error code is returned on failure */
 		ret = cdev_add(&pcdrv_data.pcdev_data[i].cdev, pcdrv_data.device_number+i, 1);
@@ -245,9 +246,9 @@ static int __init pcd_driver_init(void){
 			goto unreg_chrdev;
 		}
 
-		/* Populate the sysfs with device information 
+		/* 5. Populate the sysfs with device information 
 		 * Returns &struct class pointer on success, or ERR_PTR() on error */
-		pcdrv_data.device_pcd = device_create(pcdrv_data.class_pcd, NULL, pcdrv_data.device_number+i, NULL, "pcdev-%d",i+1);
+		pcdrv_data.device_pcd = device_create(pcdrv_data.class_pcd, NULL, pcdrv_data.device_number+i, NULL, "pcdev-%d", i+1);
 
 		/* Checks if an error has occurs on device_create function
 		 * ERR_PTR: Converts error code (int) to pointer */
