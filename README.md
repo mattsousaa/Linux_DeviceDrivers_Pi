@@ -30,10 +30,12 @@ After that, you get the kernel message. Simple, isn't it?
 [21120.720116] Hello World
 ```
 
-Finally, remove the kernel module and type **dmesg | tail**.
+Finally, remove the kernel module.
 ```
 $ rmmod main.ko
 ```
+
+See the kernel message after that. 
 
 ```
 [21336.672022] Good Bye World
@@ -107,7 +109,7 @@ $ cp file /dev/pcd
 cp: error writing '/dev/pcd': Cannot allocate memory
 ```
 
-Do you see that error? What happended? Let's analyse by **dmesg | tail** command. 
+Did you see that error? What happended? Let's analyse by **dmesg | tail** command. 
 
 ```
 [10580.529511] pcd_open : Open was successful (cp command opened our device)
