@@ -231,11 +231,11 @@ static int __init pcd_driver_init(void){
 	for(i = 0; i < NO_OF_DEVICES; i++){
 		pr_info("Device number <major>:<minor> = %d:%d\n", MAJOR(pcdrv_data.device_number+i), MINOR(pcdrv_data.device_number+i));
 	
-		/* 1. Initialize the cdev structure with fops 
+		/* 2. Initialize the cdev structure with fops 
 	 	 * This is a void function */
 		cdev_init(&pcdrv_data.pcdev_data[i].cdev, &pcd_fops); 
 
-		/* 2. Register a device (cdev structure) with VFS */
+		/* 3. Register a device (cdev structure) with VFS */
 		pcdrv_data.pcdev_data[i].cdev.owner = THIS_MODULE;
 		/* A negative error code is returned on failure */
 		ret = cdev_add(&pcdrv_data.pcdev_data[i].cdev, pcdrv_data.device_number+i, 1);
