@@ -30,6 +30,15 @@ After that, you get the kernel message. Simple, isn't it?
 [21120.720116] Hello World
 ```
 
+Finally, remove the kernel module and type **dmesg | tail**.
+```
+$ rmmod main.ko
+```
+
+```
+[21336.672022] Good Bye World
+```
+
 ## 002_pseud_char_driver - How to test this driver?
 
 In this character driver we will give support to handle the below user level system calls:
