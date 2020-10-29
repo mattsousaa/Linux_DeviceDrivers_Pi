@@ -123,7 +123,7 @@ Did you see that error? What happended? Let's analyse by **dmesg | tail** comman
 [10580.529692] pcd_release : Release was successful
 ```
 
-Copy command decode that error code and it printed cannot allocate memory. Finally, remove the kernel module.
+Copy command decode that error code and it printed *cannot allocate memory*. Finally, remove the kernel module.
 ```
 $ rmmod pcd.ko
 ```
