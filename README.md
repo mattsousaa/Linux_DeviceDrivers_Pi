@@ -98,9 +98,7 @@ Do you see that error? What happended? Let's analyse by **dmesg | tail** command
 Copy command decode that error code and it printed cannot allocate memory. Finally, remove the kernel module.
 ```
 $ rmmod pcd.ko
-```
-
-```
+$ dmesg | tail -1
 [10855.187923] pcd_driver_cleanup : Module unloaded
 ```
 
