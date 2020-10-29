@@ -13,7 +13,35 @@ network={
 }
 ```
 
-# 002_pseud_char_driver - How to test this driver?
+**Tip:** Browse the source code of linux/ online in [woboq](https://code.woboq.org/linux/). Here on this site you can find the linux files needed to understand the codes instead of looking for them on your console.
+
+## 001_hello_world - How to test this driver?
+
+This driver is just a first contact to familiarize yourself with the syntax of device drivers, no big deal. This driver just throws a message in the kernel log. Just type:
+
+```
+$ sudo -s
+$ insmod main.ko
+$ dmesg | tail
+```
+After that, you get the kernel message. Simple, isn't it?
+
+```
+[21120.720116] Hello World
+```
+
+Finally, remove the kernel module.
+```
+$ rmmod main.ko
+```
+
+See the kernel message after that. 
+
+```
+[21336.672022] Good Bye World
+```
+
+## 002_pseud_char_driver - How to test this driver?
 
 In this character driver we will give support to handle the below user level system calls:
 * open
@@ -81,7 +109,7 @@ $ cp file /dev/pcd
 cp: error writing '/dev/pcd': Cannot allocate memory
 ```
 
-Do you see that error? What happended? Let's analyse by **dmesg | tail** command. 
+Did you see that error? What happended? Let's analyse by **dmesg | tail** command. 
 
 ```
 [10580.529511] pcd_open : Open was successful (cp command opened our device)
@@ -95,7 +123,7 @@ Do you see that error? What happended? Let's analyse by **dmesg | tail** command
 [10580.529692] pcd_release : Release was successful
 ```
 
-Copy command decode that error code and it printed cannot allocate memory. Finally, remove the kernel module.
+Copy command decode that error code and it printed *cannot allocate memory*. Finally, remove the kernel module.
 ```
 $ rmmod pcd.ko
 $ dmesg | tail -1
