@@ -179,9 +179,35 @@ ssize_t pcd_write(struct file *filp, const char __user *buff, size_t count, loff
 	return -ENOMEM;
 }
 
+int check_permission(void){
+	return 0;
+}
+
 int pcd_open(struct inode *inode, struct file *filp){
-	pr_info("Open was successful \n");
-    return 0;
+
+	int ret;
+	int minor_n;
+
+	struct pcdev_private_data *pcdev_data;
+
+	/* find out on which device file open was attempted by the user space */
+
+	minor_n = MINOR(inode->i_rdev);		/* Gets the minor number */
+	pr_info("minor access = %d \n", minor_n);
+
+	/* get device's private data structure (struct cdev *i_cdev) 
+	 * i_cdev is member and the container is pcdev_private_data */
+	pcdev_data = container_of(inode->i_cdev, struct pcdev_private_data, cdev);
+
+	/* to supply device private data to other methods of the driver */
+	filp->private_data = pcdev_data;
+
+	/* check permission */
+	ret = check_permission();
+
+	(!ret)?pr_info("Open was successful \n"):pr_info("Open was unsuccessful \n");
+
+    return ret;
 }
 
 int pcd_release(struct inode *inode, struct file *filp){
