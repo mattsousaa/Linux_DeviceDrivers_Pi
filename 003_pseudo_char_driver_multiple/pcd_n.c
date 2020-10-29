@@ -225,7 +225,7 @@ static int __init pcd_driver_init(void){
 	if(IS_ERR(pcdrv_data.class_pcd)){
 		pr_err("Class creation failed \n");		
 		ret = PTR_ERR(pcdrv_data.class_pcd);			/* PTR_ERR: Converts pointer to error code(int) */
-		goto cdev_del;
+		goto unreg_chrdev;
 	}
 
 	for(i = 0; i < NO_OF_DEVICES; i++){
@@ -243,7 +243,7 @@ static int __init pcd_driver_init(void){
 		/* Checks if an error has occurs on cdev_add function */
 		if(ret < 0){
 			pr_err("Cdev add failed \n");
-			goto unreg_chrdev;
+			goto cdev_del;
 		}
 
 		/* 5. Populate the sysfs with device information 
@@ -262,11 +262,13 @@ static int __init pcd_driver_init(void){
 	pr_info("Module init was successful\n");
 	return 0;
 
-class_del:
-	class_destroy(pcdrv_data.class_pcd);
-
 cdev_del:
-	cdev_del(&pcdrv_data.pcdev_data[i].cdev);	
+class_del:
+	for( ; i >= 0; i--){
+		device_destroy(pcdrv_data.class_pcd, pcdrv_data.device_number+i);
+		cdev_del(&pcdrv_data.pcdev_data[i].cdev);
+	}
+	class_destroy(pcdrv_data.class_pcd);
 
 unreg_chrdev:
 	unregister_chrdev_region(pcdrv_data.device_number, NO_OF_DEVICES);
@@ -279,14 +281,19 @@ out:
 
 static void __exit pcd_driver_cleanup(void){
 
-#if 0
 	/* From botton up */
-	device_destroy(class_pcd, device_number);
-	class_destroy(class_pcd);
-	cdev_del(&pcd_cdev);
-	unregister_chrdev_region(device_number, 1);
+	int i;	/* Counter variable */
+
+	for(i = 0; i < NO_OF_DEVICES; i++){
+		device_destroy(pcdrv_data.class_pcd, pcdrv_data.device_number+i);
+		cdev_del(&pcdrv_data.pcdev_data[i].cdev);
+	}
+
+	class_destroy(pcdrv_data.class_pcd);
+
+	unregister_chrdev_region(pcdrv_data.device_number, NO_OF_DEVICES);
+
 	pr_info("Module unloaded \n");
-#endif 
 
 }
 
